@@ -93,6 +93,9 @@ $(document).ready(function () {
     });
 });
 
+
+
+
 var groupPeopleByTier = function(data) {
     var groups = Object.create(null);
 
@@ -121,9 +124,36 @@ var groupPeopleByTier = function(data) {
         obj[x] = groups[x];
         result.push(obj);
     }
+
+    randomizeTiers(result);
 }
 
+var randomizeTiers = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        var array = data[i][Object.keys(data[i])[0]];
 
+        var currentIndex = array.length, temporaryValue, randomIndex;
 
-//var testList = [];
-//$.each(fileAsJsonObject, function (i, j) { if (j["At which financial tier would you like to participate?"] == "100k and up") { testList.push(j["Please enter your Flight Rising username:"]) } })
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+    }
+
+    groupRandomizedPeopleByTen(data);
+}
+
+var groupRandomizedPeopleByTen = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        var array = data[i][Object.keys(data[i])[0]];
+        debugger;
+    }
+}
