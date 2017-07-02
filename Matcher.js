@@ -72,11 +72,10 @@ function CSV2JSON(csv) {
     return str;
 }
 
-var fileAsJsonObject = null;
 $(document).ready(function () {
     $("#myfile").on("change", function (changeEvent) {
         for (var i = 0; i < changeEvent.target.files.length; ++i) {
-            (function (file) {               // Wrap current file in a closure.
+            (function (file) {
                 var loader = new FileReader();
                 loader.onload = function (loadEvent) {
                     if (loadEvent.target.readyState != 2)
@@ -85,7 +84,7 @@ $(document).ready(function () {
                         alert("Error while reading file " + file.name + ": " + loadEvent.target.error);
                         return;
                     }
-                    fileAsJsonObject = $.parseJSON(CSV2JSON(loadEvent.target.result));
+                    groupPeopleByTier($.parseJSON(CSV2JSON(loadEvent.target.result)));
                 };
                 loader.readAsText(file);
                 
@@ -93,6 +92,38 @@ $(document).ready(function () {
         }
     });
 });
+
+var groupPeopleByTier = function(data) {
+    var groups = Object.create(null);
+
+    for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+
+        if (!groups[item["At which financial tier would you like to participate?"]]) {
+            groups[item["At which financial tier would you like to participate?"]] = [];
+        }
+
+        groups[item["At which financial tier would you like to participate?"]].push({
+            name: item["Please enter your Flight Rising username:"],
+            id: item["Please enter your Flight Rising ID number:"],
+            tier: item["At which financial tier would you like to participate?"],
+            reveal: item["Would you like to be revealed to your match or remain anonymous?"],
+            giftCategories: item["Which of the following would you be happy to receive from your Secret Santa?"],
+            dragon: item["Would you be happy to receive a dragon or dragons from your Secret Santa?"],
+            wishlist: item["What is on your wish list?"]
+        });
+    }
+
+    var result = [];
+
+    for (var x in groups) {
+        var obj = {};
+        obj[x] = groups[x];
+        result.push(obj);
+    }
+}
+
+
 
 //var testList = [];
 //$.each(fileAsJsonObject, function (i, j) { if (j["At which financial tier would you like to participate?"] == "100k and up") { testList.push(j["Please enter your Flight Rising username:"]) } })
