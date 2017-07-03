@@ -72,6 +72,14 @@ function CSV2JSON(csv) {
     return str;
 }
 
+var chunkify = function (array, size) {
+    var results = [];
+    while (array.length) {
+        results.push(array.splice(0, size));
+    }
+    return results;
+};
+
 $(document).ready(function () {
     $("#myfile").on("change", function (changeEvent) {
         for (var i = 0; i < changeEvent.target.files.length; ++i) {
@@ -152,8 +160,69 @@ var randomizeTiers = function (data) {
 }
 
 var groupRandomizedPeopleByTen = function (data) {
-    for (var i = 0; i < data.length; i++) {
-        var array = data[i][Object.keys(data[i])[0]];
-        debugger;
+    for (var tier = 0; tier < data.length; tier++) {
+        var array = data[tier][Object.keys(data[tier])[0]];
+
+        data[tier][Object.keys(data[tier])[0]] = chunkify(array, 10);
+
+        var howManyGroups = data[tier][Object.keys(data[tier])[0]].length;
+        var lengthOfLastGroupInTier = data[tier][Object.keys(data[tier])[0]][howManyGroups - 1].length;
+        if (lengthOfLastGroupInTier < 5) {
+            debugger;
+            data[tier][Object.keys(data[tier])[0]][howManyGroups - 2] = data[tier][Object.keys(data[tier])[0]][howManyGroups - 2].concat(data[tier][Object.keys(data[tier])[0]][howManyGroups - 1]);
+            data[tier][Object.keys(data[tier])[0]].pop();
+        }
     }
+
+    displayGeneratedGroups(data);
+}
+
+var displayGeneratedGroups = function (data) {
+    var tableContent;
+    $.each(data, function (i, j) {
+        var sortedData;
+        var sectionTitle;
+        if (j["500k and up"]) {
+            sectionTitle = "500k";
+            sortedData = j["500k and up"];
+        } else if (j["100k and up"]) {
+            sectionTitle = "100k";
+            sortedData = j["100k and up"];
+        } else if (j["50k and up"]) {
+            sectionTitle = "50k";
+            sortedData = j["50k and up"];
+        } else if (j["20k and up"]) {
+            sectionTitle = "20k";
+            sortedData = j["20k and up"];
+        }
+
+        
+        for (var i = 0; i < sortedData.length; i++) {
+            var currentGroup = sortedData[i];
+            tableContent += '<tr class="separatorRow"><td>' + sectionTitle + '</td><td colspan="8">GROUP#' + (i+1) + '</td></tr>';
+            for (var j = 0; j < currentGroup.length; j++) {
+                var currentPerson = currentGroup[j];
+                var nextPerson = currentGroup[j + 1] ? currentGroup[j + 1] : currentGroup[0];
+                tableContent += //name id tier reveal giftCategories dragon wishlist
+                    '<tr>' +
+                    '<td>' + currentPerson.reveal + '</td>' +
+                    '<td>' + currentPerson.name + '</td>' +
+                    '<td>' + currentPerson.id + '</td>' +
+                    '<td>' + nextPerson.name + '</td>' +
+                    '<td>' + nextPerson.id + '</td>' +
+                    '<td>' + nextPerson.tier + '</td>' +
+                    '<td>' + nextPerson.giftCategories + '</td>' +
+                    '<td>' + nextPerson.dragon + '</td>' +
+                    '<td>' + nextPerson.wishlist + '</td>' +
+                    '</tr>';
+            }
+        }
+    });
+    var table =
+        '<table><tbody>' +
+        '<tr><td>ANONYMOUS?</td><td>Santa</td><td>Santa ID#</td><td>Match</td><td>Match ID#</td><td>Tier</td><td>Interested In</td><td>Dragons?</td><td>Wishlist</td></tr>' +
+        tableContent +
+        '</tbody></table>';
+
+    $('#generatedResultsDiv').html(table);
 }
