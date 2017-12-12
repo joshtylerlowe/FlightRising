@@ -81,7 +81,7 @@ var groupRandomizedPeopleByTen = function (data) {
     for (var tier = 0; tier < data.length; tier++) {
         var array = data[tier][Object.keys(data[tier])[0]];
 
-        data[tier][Object.keys(data[tier])[0]] = chunkify(array, 10);
+        data[tier][Object.keys(data[tier])[0]] = chunkify(array, 17);
 
         var howManyGroups = data[tier][Object.keys(data[tier])[0]].length;
         var lengthOfLastGroupInTier = data[tier][Object.keys(data[tier])[0]][howManyGroups - 1].length;

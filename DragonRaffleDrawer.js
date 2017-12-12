@@ -30,25 +30,25 @@ var doTheThing = function (data) {
         var row = data[i];
         var person = {
             name: row["Username"],
-            choice1: parseInt(row["What is your first choice?"]) || -1,
-            choice2: parseInt(row["What is your second choice?"]) || -1,
-            choice3: parseInt(row["What is your third choice?"]) || -1,
-            choice4: parseInt(row["What is your fourth choice?"]) || -1,
-            choice5: parseInt(row["What is your fifth choice?"]) || -1,
-            choice6: parseInt(row["What is your sixth choice?"]) || -1,
-            choice7: parseInt(row["What is your seventh choice?"]) || -1,
-            choice8: parseInt(row["What is your eighth choice?"]) || -1,
-            choice9: parseInt(row["What is your ninth choice?"]) || -1,
-            choice10: parseInt(row["What is your tenth choice?"]) || -1,
+            choice1: row["First choice?"],
+            choice2: row["Second choice?"],
+            choice3: row["Third choice?"],
+            choice4: row["Fourth choice?"],
+            choice5: row["Fifth choice?"],
+            choice6: row["Sixth choice?"],
+            choice7: row["Seventh choice?"],
+            choice8: row["Eighth choice?"],
+            choice9: row["Ninth choice?"],
+            choice10: row["Tenth choice?"],
             draws: 1 + parseInt(row["How many bonus tickets would you like to use?"])
         };
         
         people.push(person);
 
         for (var choiceNum = 1; choiceNum <= 10; choiceNum++) {
-            var numberInQuestion = person[['choice' + choiceNum]];
-            if (numberInQuestion > 0 && dragons.includes(numberInQuestion) == false) {
-                dragons.push(numberInQuestion);
+            var dragonInQuestion = person[['choice' + choiceNum]];
+            if (dragonInQuestion.length > 0 && dragons.includes(dragonInQuestion) == false) {
+                dragons.push(dragonInQuestion);
                 break;
             }
         }
@@ -68,7 +68,7 @@ var doTheThing = function (data) {
 
         for (var choiceNum = 1; choiceNum <= 10; choiceNum++) {
             var nextMostDragonChoice = personDetails[['choice' + choiceNum]];
-            if (nextMostDragonChoice > 0 && dragons.includes(nextMostDragonChoice)) {
+            if (nextMostDragonChoice.length > 0 && dragons.includes(nextMostDragonChoice)) {
                 dragons = dragons.filter(x => x !== nextMostDragonChoice);
                 winners.push({ name: personDetails.name, dragon: nextMostDragonChoice });
                 break;
@@ -84,7 +84,7 @@ var doTheThing = function (data) {
 
     for (var i = 0; i < winners.length; i++) {
         var winner = winners[i];
-        resultsHtml += winner.name + ' => Dragon ' + winner.dragon + '<br/>';
+        resultsHtml += winner.name + ' => ' + winner.dragon + '<br/>';
     }
 
     resultsHtml += '</div><br/><br/>';
