@@ -13,7 +13,7 @@
                     groupPeopleByTier($.parseJSON(CSV2JSON(loadEvent.target.result)));
                 };
                 loader.readAsText(file);
-                
+
             })(changeEvent.target.files[i]);
         }
     });
@@ -28,18 +28,18 @@ var groupPeopleByTier = function(data) {
     for (var i = 0; i < data.length; i++) {
         var item = data[i];
 
-        if (!groups[item["At which financial tier would you like to participate?"]]) {
-            groups[item["At which financial tier would you like to participate?"]] = [];
+        if (!groups[item["Which participation tier would you like to join?"]]) {
+            groups[item["Which participation tier would you like to join?"]] = [];
         }
 
-        groups[item["At which financial tier would you like to participate?"]].push({
+        groups[item["Which participation tier would you like to join?"]].push({
             name: item["Please enter your Flight Rising username:"],
             id: item["Please enter your Flight Rising ID number:"],
-            tier: item["At which financial tier would you like to participate?"],
+            tier: item["Which participation tier would you like to join?"],
             reveal: item["Would you like to be revealed to your match or remain anonymous?"],
             giftCategories: item["Which of the following would you be happy to receive from your Secret Santa?"],
             dragon: item["Would you be happy to receive a dragon or dragons from your Secret Santa?"],
-            wishlist: item["What is on your wish list?"]
+            wishlist: item["What's on your wishlist this season?"]
         });
     }
 
@@ -81,12 +81,11 @@ var groupRandomizedPeopleByTen = function (data) {
     for (var tier = 0; tier < data.length; tier++) {
         var array = data[tier][Object.keys(data[tier])[0]];
 
-        data[tier][Object.keys(data[tier])[0]] = chunkify(array, 17);
+        data[tier][Object.keys(data[tier])[0]] = chunkify(array, 20);
 
         var howManyGroups = data[tier][Object.keys(data[tier])[0]].length;
         var lengthOfLastGroupInTier = data[tier][Object.keys(data[tier])[0]][howManyGroups - 1].length;
         if (lengthOfLastGroupInTier < 5) {
-            debugger;
             data[tier][Object.keys(data[tier])[0]][howManyGroups - 2] = data[tier][Object.keys(data[tier])[0]][howManyGroups - 2].concat(data[tier][Object.keys(data[tier])[0]][howManyGroups - 1]);
             data[tier][Object.keys(data[tier])[0]].pop();
         }
@@ -114,7 +113,7 @@ var displayGeneratedGroups = function (data) {
             sortedData = j["20k and up"];
         }
 
-        
+
         for (var i = 0; i < sortedData.length; i++) {
             var currentGroup = sortedData[i];
             tableContent += '<tr class="separatorRow"><td>' + sectionTitle + '</td><td colspan="8">GROUP#' + (i+1) + '</td></tr>';
